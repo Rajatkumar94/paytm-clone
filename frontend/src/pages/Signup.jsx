@@ -1,9 +1,9 @@
 import React from "react";
-import BottomHeading from "./BottomHeading";
-import Button from "./Button";
-import Heading from "./Heading";
-import InputField from "./InputField";
-import SubHeading from "./SubHeading";
+import BottomHeading from "../components/BottomHeading";
+import Button from "../components/Button";
+import Heading from "../components/Heading";
+import InputField from "../components/InputField";
+import SubHeading from "../components/SubHeading";
 
 function Signup() {
   return (
@@ -15,7 +15,11 @@ function Signup() {
       <InputField label="Email" type="text" placeholder="example@gmail.com" />
       <InputField label="Password" type="text" placeholder="John" />
       <Button label="Sign Up" />
-      <BottomHeading label="Already have an account?" buttonText="Sign-in" />
+      <BottomHeading
+        label="Already have an account?"
+        buttonText="Sign-in"
+        to="/signin"
+      />
     </div>
   );
 }

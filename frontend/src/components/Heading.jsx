@@ -1,10 +1,9 @@
 import React from "react";
 
-function Heading({ label, info }) {
+function Heading({ label}) {
   return (
-    <div className="">
-      <h1 className="font-medium text-3xl">{label}</h1>
-      <p>{info}</p>
+    <div className="font-bold text-4xl pt-6">
+      {label}
     </div>
   );
 }
