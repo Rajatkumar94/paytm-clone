@@ -69,6 +69,8 @@ userRouter.post("/signin", async (req, res) => {
         JWT_SECRET_KEY
       );
       res.status(200).send({ token: token });
+    } else {
+      res.status(404).send({ message: "Not Found" });
     }
   } catch (e) {
     res.status(411).send({ message: "Error while logging in" });
@@ -92,12 +94,15 @@ userRouter.put("/user", authMiddleware, async (req, res) => {
   }
 });
 
-userRouter.get("/bulk", authMiddleware, async () => {
+userRouter.get("/bulk", authMiddleware, async (req, res) => {
   const filter = req.query.filter || "";
 
   try {
     const user = await UserModel.find({
-      $or: [{ firstName: filter }, { lastName: filter.lastName }],
+      $or: [
+        { firstName: { $regex: `${filter}`, $options: "i" } },
+        { lastName: { $regex: `${filter}`, $options: "i" } },
+      ],
     });
     res.status(200).send({
       user: user.map((user) => ({
