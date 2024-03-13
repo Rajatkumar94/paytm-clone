@@ -7,12 +7,33 @@ import axios from "axios";
 function SendMoney() {
   const [search] = useSearchParams();
   const name = search.get("name");
+  const id = search.get("id");
   const [amount, setAmount] = useState();
 
   const handleTransaction = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token not found");
+      }
+
+      const response = await axios.post(
+        "http://localhost:3000/app/v1/account/transfer",
+        {
+          to: id,
+          amount: amount,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      console.log("Transaction successful:", response.data);
     } catch (err) {
-      alert("Transaction error: " + err);
+      console.error("Transaction error:", err);
+      alert("Transaction error: " + err.message);
     }
   };
   return (
@@ -26,7 +47,7 @@ function SendMoney() {
             <div className="flex items-center space-x-4">
               <div className="rounded-full w-12 h-12 bg-green-500 flex items-center justify-center">
                 <span className="text-2xl text-white">
-                  {/* {name.toUpperCase()} */}
+                  {name[0].toUpperCase()}
                 </span>
               </div>
               <h3 className="font-semibold text-2xl">{name}</h3>
@@ -44,10 +65,13 @@ function SendMoney() {
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   id="amount"
                   placeholder="Enter amount"
-                  onCanPlay={(e) => setAmount(e.target.value)}
+                  onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
-              <button className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
+              <button
+                onClick={handleTransaction}
+                className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white"
+              >
                 Initiate Transfer
               </button>
             </div>

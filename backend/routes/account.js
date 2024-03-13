@@ -16,37 +16,47 @@ accountRounter.get("/balance", authMiddleware, async (req, res) => {
 });
 
 accountRounter.post("/transfer", authMiddleware, async (req, res) => {
-  const { to, amount } = req.body;
-
   const session = await mongoose.startSession();
   session.startTransaction();
 
-  const from = await accountModel.findById(req.userId).session(session);
-
-  if (!from || from.balance < amount) {
-    await session.abortTransaction();
-    return res.status(400).send({ message: "Insufficient balance" });
-  }
-
   try {
-    const to = await accountModel.findById({ _id: to }).session(session);
+    const { to, amount } = req.body;
+
+    console.log(" calling bro ", req.userId, to, amount);
+
+    const from = await accountModel
+      .findOne({ userId: req.userId })
+      .session(session);
+
+    console.log(" from ", from);
+
+    if (!from || from.balance < amount) {
+      await session.abortTransaction();
+      return res.status(400).send({ message: "Insufficient balance" });
+    }
+    const toAccount = await accountModel
+      .findOne({ userId: to })
+      .session(session);
+
+    console.log(" calling account ", to, toAccount);
+
+    if (!toAccount) {
+      await session.abortTransaction();
+      return res.status(400).send({ message: "Invalid account" });
+    }
 
     await accountModel
-      .findByIdAndUpdate(req.userId, {
-        balance: balance - amount,
-      })
+      .updateOne({ userId: req.userId }, { $inc: { balance: -amount } })
       .session(session);
 
     await accountModel
-      .findByIdAndUpdate(to._id, {
-        balance: balance + amount,
-      })
+      .updateOne({ userId: to }, { $inc: { balance: amount } })
       .session(session);
 
     res.status(200).send({ message: "Transfer successful" });
-    session.commitTransaction();
+    await session.commitTransaction();
   } catch (err) {
-    res.status(500).send({ message: "Invalid account" });
+    res.status(500).send({ message: err.message });
   }
 });
 

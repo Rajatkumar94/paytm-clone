@@ -4,17 +4,12 @@ import Appbar from "../components/Appbar";
 import Balance from "../components/Balance";
 import Users from "../components/Users";
 
+import { useSearchParams } from "react-router-dom";
+
 function Dashboard() {
-  const [fromAccount, setFromAccount] = useState({});
-  useEffect(() => {
-    axios.get("http://localhost:3000/api/v1/account/balance", {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("token"),
-      },
-      
-    });
-  }, []);
+  const [currentUser,setCurrentUser] = useState({});
+  
+  useEffect(() => {}, []);
   return (
     <div>
       <Appbar />

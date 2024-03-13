@@ -23,8 +23,8 @@ function Signin() {
         "http://localhost:3000/app/v1/user/signin",
         signUser
       );
-      localStorage.setItem("token", response.data.token)
-      navigate("/dashboard");
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard?username=" + signUser.username);
     } catch (error) {
       alert(error.message);
     }
