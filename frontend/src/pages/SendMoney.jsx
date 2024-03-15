@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import Heading from "../components/Heading";
-import InputField from "../components/InputField";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function SendMoney() {
@@ -9,6 +7,7 @@ function SendMoney() {
   const name = search.get("name");
   const id = search.get("id");
   const [amount, setAmount] = useState();
+  const navigate = useNavigate();
 
   const handleTransaction = async () => {
     try {
@@ -30,7 +29,9 @@ function SendMoney() {
           },
         }
       );
+
       console.log("Transaction successful:", response.data);
+      // navigate("/dashboard");
     } catch (err) {
       console.error("Transaction error:", err);
       alert("Transaction error: " + err.message);
@@ -56,7 +57,7 @@ function SendMoney() {
               <div className="space-y-2">
                 <label
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  for="amount"
+                  htmlFor="amount"
                 >
                   Amount (in Rs)
                 </label>

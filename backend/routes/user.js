@@ -66,7 +66,8 @@ userRouter.post("/signin", async (req, res) => {
         {
           userId,
         },
-        JWT_SECRET_KEY
+        JWT_SECRET_KEY,
+        { expiresIn: "2m" }
       );
       res.status(200).send({ token: token });
     } else {

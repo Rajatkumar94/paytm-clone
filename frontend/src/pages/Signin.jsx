@@ -43,13 +43,14 @@ function Signin() {
             onChange={handleInputChange}
             placeholder="example@gmail.com"
           />
+          
           <InputField
             label="Password"
             type="text"
             name={"password"}
             value={signUser.password}
             onChange={handleInputChange}
-            placeholder="John"
+            placeholder="********"
           />
           <Button label="Sign in" onClick={handleSignin} />
           <BottomHeading
